@@ -1,0 +1,101 @@
+package org.acme.quickstart;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+import java.util.Properties;
+
+import javax.imageio.ImageIO;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+
+
+@Path("/image")
+@Consumes(MediaType.APPLICATION_JSON)
+//@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+public class ImageProcessingResource {
+	public static String KAFKA_BROKERS = "localhost:9092";
+	public static String CLIENT_ID="mnist";
+    public static String TOPIC_NAME="incoming";
+	
+	@POST
+    public void processImage(@QueryParam("image") String image ) {
+		System.out.println("Received image: " + image);
+		Properties properties = new Properties();
+	    properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_BROKERS);
+	    properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+//	    properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+	    properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName());
+	   
+		byte[] imageData;
+		try {
+			imageData = Base64.getDecoder().decode(new String(image).getBytes("UTF-8"));
+			OutputStream stream = new FileOutputStream("image.png");
+			stream.write(imageData);
+			stream.close();
+			ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+			BufferedImage bImage = ImageIO.read(bais);
+			BufferedImage gray = convertToGrayScale(bImage);
+			WritableRaster raster = gray.getRaster();
+			DataBufferByte data = (DataBufferByte) raster.getDataBuffer();    
+			byte[] rawPixels = data.getData();
+			System.out.println("rawPixels.length: " + rawPixels.length);
+	        
+
+//		    ProducerCreator prodCreator = new ProducerCreator();
+		    Producer<String, byte[]> producer = new KafkaProducer<>(properties);
+		    ProducerRecord <String, byte[]> record = new ProducerRecord<>(
+                    TOPIC_NAME, //topic
+                    "Key", //key
+                    rawPixels);
+//		    Producer<String, String> producer = new KafkaProducer<>(properties);
+//		    ProducerRecord <String,String> record = new ProducerRecord<>(
+//                    TOPIC_NAME, //topic
+//                    "Key", //key
+//                    "hello");
+		    producer.send(record);
+		    System.out.println("imageData.length = " + imageData.length);
+		    producer.close();
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();    
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// return Response.status(200).entity(url).build();
+    }
+	public static BufferedImage convertToGrayScale(BufferedImage image) {
+		  BufferedImage result = new BufferedImage(
+		            image.getWidth(),
+		            image.getHeight(),
+		            BufferedImage.TYPE_BYTE_GRAY);
+		  Graphics g = result.getGraphics();
+		  g.drawImage(image, 0, 0, null);
+		  g.dispose();
+		  return result;
+		}
+
+}
