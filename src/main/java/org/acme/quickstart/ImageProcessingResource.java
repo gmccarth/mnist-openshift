@@ -62,6 +62,7 @@ public class ImageProcessingResource {
 	    conProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 	    conProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         conProperties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
+        conProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "console-consumer-86098");
 	    conProperties.put("group.id", "result");
 	    Consumer<byte[],byte[]> consumer = new KafkaConsumer<>(conProperties);
         consumer.subscribe(Collections.singletonList(TOPIC));
