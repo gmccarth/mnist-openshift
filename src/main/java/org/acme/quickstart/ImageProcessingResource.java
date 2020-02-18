@@ -34,7 +34,7 @@ public class ImageProcessingResource {
 	public static String KAFKA_BROKERS = "10.128.2.14:9092";
 	public static String CLIENT_ID="mnist";
     public static String TOPIC_NAME="incoming";
-    public static Integer MAX_NO_MESSAGE_FOUND_COUNT=3;
+    public static Integer MAX_NO_MESSAGE_FOUND_COUNT=20;
 	
 	@POST
     public Response processImage( String image ) {
@@ -70,7 +70,7 @@ public class ImageProcessingResource {
         String message = new String();
     	while (true) {
  
-            ConsumerRecords<byte[], byte[]> consumerRecords = consumer.poll(Duration.ofMillis(2000));
+            ConsumerRecords<byte[], byte[]> consumerRecords = consumer.poll(Duration.ofMillis(500));
             System.out.println("Fetched " + consumerRecords.count() + " records");
             if (consumerRecords.count() == 0) {
                 noMessageFound++;
