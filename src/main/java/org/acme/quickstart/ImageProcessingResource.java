@@ -59,7 +59,7 @@ public class ImageProcessingResource {
 	    conProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_BROKERS);
 	    conProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getName());
 	    conProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class.getName());
-	    conProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+	    conProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 	    conProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         conProperties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
         conProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "console-consumer-86098");
