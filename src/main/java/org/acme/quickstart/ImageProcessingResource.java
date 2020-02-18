@@ -34,7 +34,7 @@ public class ImageProcessingResource {
 	public static String KAFKA_BROKERS = "10.128.2.14:9092";
 	public static String CLIENT_ID="mnist";
     public static String TOPIC_NAME="incoming";
-    public static Integer MAX_NO_MESSAGE_FOUND_COUNT=20;
+    public static Integer MAX_NO_MESSAGE_FOUND_COUNT=1;
 	
 	@POST
     public Response processImage( String image ) {
@@ -62,7 +62,7 @@ public class ImageProcessingResource {
 	    conProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 	    conProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         conProperties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
-        conProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "console-consumer-86098");
+//        conProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "console-consumer-86098");
 	    conProperties.put("group.id", "result");
 	    Consumer<byte[],byte[]> consumer = new KafkaConsumer<>(conProperties);
         consumer.subscribe(Collections.singletonList(TOPIC));
@@ -71,7 +71,7 @@ public class ImageProcessingResource {
         String message = new String();
     	while (true) {
  
-            ConsumerRecords<byte[], byte[]> consumerRecords = consumer.poll(Duration.ofMillis(500));
+            ConsumerRecords<byte[], byte[]> consumerRecords = consumer.poll(Duration.ofMillis(3000));
             System.out.println("Fetched " + consumerRecords.count() + " records");
             if (consumerRecords.count() == 0) {
                 noMessageFound++;
