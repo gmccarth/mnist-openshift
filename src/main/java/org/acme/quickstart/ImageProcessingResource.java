@@ -102,6 +102,7 @@ public class ImageProcessingResource {
                 System.out.println("Prediction is: " + maxIdx);
             };
 	            consumer.commitAsync();
+	            //
     	}
     	consumer.close();
     	System.out.println("response: " + message);
