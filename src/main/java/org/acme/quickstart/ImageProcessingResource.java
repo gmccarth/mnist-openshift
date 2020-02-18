@@ -31,7 +31,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class ImageProcessingResource {
-	public static String KAFKA_BROKERS = "10.128.2.14:9092,10.131.0.13:9092,10.130.0.19:9092";
+	public static String KAFKA_BROKERS = "10.128.2.14:9092";
 	public static String CLIENT_ID="mnist";
     public static String TOPIC_NAME="incoming";
     public static Integer MAX_NO_MESSAGE_FOUND_COUNT=3;
