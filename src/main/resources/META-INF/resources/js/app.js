@@ -186,6 +186,7 @@ function clearCanvas(id) {
 	clickX = new Array();
 	clickY = new Array();
 	clickD = new Array();
+	document.getElementById('chart_box').style.display = "none";
 }
 
 //-------------------------------------
