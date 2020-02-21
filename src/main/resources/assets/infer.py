@@ -1,3 +1,4 @@
+import requests
 import keras
 from keras.models import load_model
 import tensorflow as tf
@@ -6,12 +7,10 @@ from kafka import KafkaConsumer, KafkaProducer
 from time import sleep
 import numpy as np
 import json
-import boto3
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-print("connnecting to AWS S3")
-s3 = boto3.client('s3')
-with open('mnist.h5', 'wb') as f:
-	s3.download_fileobj('gm-openshift','mnist.h5',f)
+mnist_file_url = "https://raw.githubusercontent.com/gmccarth/mnist-openshift/master/src/main/resources/assets/mnist.h5"
+mnist_file = requests.get(mnist_file_url)
+open('mnist.h5', 'wb').write(mnist_file.content)
 print("Model downloaded")
 model = load_model('mnist.h5',custom_objects={'softmax_v2': tf.nn.softmax})
 bootstrap_servers = ['my-cluster-kafka-bootstrap.mnist-demo.svc:9092']
