@@ -77,7 +77,7 @@ On the `Installed Operators` page, click on the **Open Data Hub Operator**.
 Click on `Create Instance` under **Provided APIs**, then click `Create`.  
 >This will take a couple of minutes to spin up the necessary pods. 
 
-####Installing the Quarkus web app
+#### Installing the Quarkus web app
 On your local machine, open up a terminal session and login to the Openshift environment, using `oc` and your cluster admin credentials. It should look similar to the command below, substituting your Openshift URL and cluser administrator login user.
 
 `oc login https://api.cluster-mnist-xxxx.mnist-xxxx.example.opentlc.com:6443 -u cluster-admin`
@@ -95,8 +95,8 @@ We need to expose the service in order to make it accessible on the web. To do t
 
 Now, go to the Openshift web console to `Networking` -> `Routes`. You should see a new route for **mnist-demo-app**. Before we go to this URL for the web app, we need to configure our Python environment, so it can run the Prediction app.
 
-##Putting it all together
-####Configuring the Python environment
+## Putting it all together
+#### Configuring the Python environment
 
 In the `Networking` > `Routes` section of the Openshift web console, get the location for `jupyterhub` and navigate to that URL in another tab of the web browser.
 >You may be asked to sign in with Openshift. If so, use the same cluster-admin user id and password that you used for Openshift.
@@ -114,9 +114,9 @@ In the Notebook terminal run the following commands:
 Ignore any warnings at this time. Next we need to pull down the Python application that we use to predict the numbers. Run the following in the terminal.  
 `wget https://raw.github.com/gmccarth/mnist-openshift/master/src/main/resources/assets/infer.py`  
 To check that it downloaded correctly, type `ls -l` in the terminal, and you should see `infer.py` listed, along with the `lost+found` directory. 
-####Run the Python app
+#### Run the Python app
 In the terminal, type `python infer.py` and hit reurn. The app should initialize and you should see `Ready` on the terminal.
-####Use the web application
+#### Use the web application
 In the Openshift web console, go to `Networking` > `Routes` and copy the location of the mnist-demo-app URL. Open that URL in a new browser tab. Using your mouse, draw a single digit between 0 and 9 in the black square as shown below:
 ![MNIST Web App](src/main/resources/assets/mnist-web-app.png)
 Click on Predict and wait a few seconds for the result. To see the prediction directly on the Python application, go back to your `jupyter notebook` and the prediction is written to the terminal each time a new number is submitted.
