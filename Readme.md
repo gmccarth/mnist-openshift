@@ -2,6 +2,8 @@
 In this module, you will learn how to install and configure the AMQ Streams and Open Data Hub Operators on Openshift 4.x.
 
 This workshop consists of a Quarkus web application, that provides the input (a handrwitten digit), a simple Python application that takes the input, performs a prediction and returns that prediction to the web application. Kafka topics will be used to pass the input data to the python application, and another topic to return the inference (prediction) to the web application.  
+![](src/main/resources/assets/mnist-app-overview.png)
+
 ## Prerequisites
 * Red Hat Openshift 4.2+ environment 
 * Basic knowledge of Openshift Operators
